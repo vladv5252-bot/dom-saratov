@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Сдаётся дом — Саратов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --green: #2e5b3e;
+    --green-dark: #1e3d29;
+    --gold: #e8a33d;
+    --cream: #faf7f0;
+  }
+  body {
+    font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+    background: var(--cream);
+    color: #3a3a3a;
+    line-height: 1.7;
+  }
+  h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; }
+
+  /* ===== ШАПКА ===== */
+  header {
+    background:
+      linear-gradient(rgba(20, 45, 30, 0.78), rgba(20, 45, 30, 0.85)),
+      url('photo1.jpg') center/cover no-repeat,
+      radial-gradient(circle at 30% 20%, #3d7a52, var(--green-dark));
+    color: #fff;
+    text-align: center;
+    padding: 110px 20px 90px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::after {
+    content: '';
+    position: absolute; bottom: -2px; left: 0; right: 0;
+    height: 60px;
+    background: radial-gradient(circle at 10px -10px, transparent 18px, var(--cream) 19px);
+    background-size: 40px 40px;
+  }
+  header .leaf { position: absolute; font-size: 2em; opacity: 0.25; }
+  .leaf.l1 { top: 15%; left: 8%; transform: rotate(-20deg); }
+  .leaf.l2 { top: 60%; left: 15%; transform: rotate(30deg); }
+  .leaf.l3 { top: 20%; right: 10%; transform: rotate(15deg); }
+  .leaf.l4 { top: 65%; right: 14%; transform: rotate(-35deg); }
+  .badge {
+    display: inline-block; background: var(--gold); color: #fff;
+    padding: 8px 24px; border-radius: 30px; font-size: 0.95em;
+    font-weight: 600; letter-spacing: 1px; margin-bottom: 22px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  header h1 { font-size: 3.2em; margin-bottom: 14px; text-shadow: 0 3px 10px rgba(0,0,0,0.4); }
+  header .subtitle { font-size: 1.35em; opacity: 0.95; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .divider { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 26px; color: var(--gold); }
+  .divider::before, .divider::after {
+    content: ''; width: 90px; height: 1px; background: var(--gold); opacity: 0.7;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 50px 24px; }
+
+  h2 {
+    color: var(--green); font-size: 2.3em; text-align: center;
+    margin-bottom: 8px;
+  }
+  .section-sub { text-align: center; color: #8a8a8a; margin-bottom: 36px; font-size: 1.05em; }
+  .ornament { text-align: center; color: var(--gold); font-size: 1.4em; margin-bottom: 30px; }
+
+  /* ===== ГАЛЕРЕЯ ===== */
+  .gallery {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 22px; margin-bottom: 70px;
+  }
+  @media (max-width: 820px) { .gallery { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .gallery { grid-template-columns: 1fr; } }
+  .photo {
+    position: relative; width: 100%; padding-top: 75%;
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #e8e4db;
+  }
+  .photo:hover { transform: translateY(-6px); box-shadow: 0 14px 28px rgba(0,0,0,0.2); }
+  .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .photo .placeholder {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; color: #a09a8c;
+    font-size: 1.02em; text-align: center; padding: 10px;
+    border: 2px dashed #c9c2b2; border-radius: 14px;
+  }
+  .photo .placeholder span { font-size: 2.4em; margin-bottom: 8px; }
+  .photo .zoom-hint {
+    position: absolute; right: 12px; bottom: 12px;
+    background: rgba(0,0,0,0.55); color: #fff; border-radius: 50%;
+    width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1em; opacity: 0; transition: opacity 0.3s;
+  }
+  .photo:hover .zoom-hint { opacity: 1; }
+
+  /* ===== ЛАЙТБОКС ===== */
+  .lightbox {
+    display: none; position: fixed; inset: 0; z-index: 100;
+    background: rgba(15, 15, 15, 0.93);
+    align-items: center; justify-content: center;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 88vw; max-height: 82vh; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+  .lb-btn {
+    position: absolute; background: rgba(255,255,255,0.12); color: #fff;
+    border: none; border-radius: 50%; width: 54px; height: 54px;
+    font-size: 1.6em; cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lb-btn:hover { background: rgba(255,255,255,0.3); }
+  .lb-close { top: 22px; right: 26px; }
+  .lb-prev { left: 22px; top: 50%; transform: translateY(-50%); }
+  .lb-next { right: 22px; top: 50%; transform: translateY(-50%); }
+  .lb-counter {
+    position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+    color: #fff; font-size: 1.05em; letter-spacing: 2px; opacity: 0.8;
+  }
+
+  /* ===== ПРЕИМУЩЕСТВА ===== */
+  .features {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 26px; margin: 10px 0 60px;
+  }
+  @media (max-width: 820px) { .features { grid-template-columns: 1fr; } }
+  .card {
+    background: #fff; border-radius: 16px; padding: 34px 28px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+    border-top: 4px solid var(--gold);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .card:hover { transform: translateY(-5px); box-shadow: 0 12px 26px rgba(0,0,0,0.13); }
+  .card .icon {
+    font-size: 2.6em; margin-bottom: 14px;
+    width: 76px; height: 76px; border-radius: 50%;
+    background: linear-gradient(135deg, #f4e8d4, #f9f3e8);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card h3 { color: var(--green); margin-bottom: 10px; font-size: 1.45em; }
+
+  .desc { max-width: 860px; margin: 0 auto 70px; }
+  .desc p { margin-bottom: 16px; font-size: 1.1em; text-align: center; }
+  .desc p b { color: var(--green); }
+
+  /* ===== КОНТАКТЫ ===== */
+  .contact-wrap {
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    border-radius: 22px; padding: 60px 30px; text-align: center;
+    color: #fff; position: relative; overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .contact-wrap::before {
+    content: '🌿'; position: absolute; font-size: 9em; opacity: 0.08;
+    left: -20px; bottom: -30px; transform: rotate(20deg);
+  }
+  .contact-wrap::after {
+    content: '🏡'; position: absolute; font-size: 8em; opacity: 0.08;
+    right: -10px; top: -20px; transform: rotate(-15deg);
+  }
+  .contact-wrap h2 { color: #fff; margin-bottom: 6px; }
+  .phone {
+    font-size: 2.4em; font-weight: 700; color: #ffd98a;
+    text-decoration: none; display: inline-block; margin: 22px 0 8px;
+    transition: transform 0.2s, color 0.2s;
+    font-family: 'Playfair Display', serif;
+  }
+  .phone:hover { transform: scale(1.05); color: #fff; }
+  .note { font-size: 1.12em; opacity: 0.95; margin-top: 12px; }
+.vk-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #4a76a8; color: #fff; text-decoration: none;
+    padding: 12px 28px; border-radius: 30px; font-size: 1.15em; font-weight: 600;
+    margin-top: 14px; transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  .vk-btn:hover { background: #3a6391; transform: translateY(-2px); }
+  .vk-btn .vk-ic {
+    width: 28px; height: 28px; border-radius: 6px; background: #fff; color: #4a76a8;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.95em;
+  }
+  .notes-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 24px; }
+  .note-pill {
+    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 30px; padding: 10px 22px; font-size: 1.02em;
+  }
+
+  footer { text-align: center; padding: 26px 20px 34px; color: #a5a29a; font-size: 0.92em; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="leaf l1">🌿</span><span class="leaf l2">🍃</span>
+  <span class="leaf l3">🌿</span><span class="leaf l4">🍃</span>
+  <div class="badge">🏡 СДАЁТСЯ ДОМ</div>
+  <h1>Уютный дом для отдыха</h1>
+  <div class="subtitle">📍 г. Саратов</div>
+  <div class="divider">❖</div>
+</header>
+
+<div class="container">
+
+  <h2>Фотографии</h2>
+  <p class="section-sub">Нажмите на фото, чтобы открыть и полистать</p>
+  <div class="ornament">— ❦ —</div>
+
+  <div class="gallery" id="gallery">
+    <div class="photo" onclick="openLb(0)">
+      <img src="photo1.jpg" alt="Фото дома 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="placeholder" style="display:none;"><span>📷</span>Место для фото 1<br>файл photo1.jpg</div>
+      <div class="zoom-hint">🔍</div>
+    </div>
+    <div class="photo" onclick="openLb(1)">
+      <img src="photo2.jpg" alt="Фото дома 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="placeholder" style="display:none;"><span>📷</span>Место для фото 2<br>файл photo2.jpg</div>
+      <div class="zoom-hint">🔍</div>
+    </div>
+    <div class="photo" onclick="openLb(2)">
+      <img src="photo3.jpg" alt="Фото дома 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="placeholder" style="display:none;"><span>📷</span>Место для фото 3<br>файл photo3.jpg</div>
+      <div class="zoom-hint">🔍</div>
+    </div>
+    <div class="photo" onclick="openLb(3)">
+      <img src="photo4.jpg" alt="Фото дома 4" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="placeholder" style="display:none;"><span>📷</span>Место для фото 4<br>файл photo4.jpg</div>
+      <div class="zoom-hint">🔍</div>
+    </div>
+    <div class="photo" onclick="openLb(4)">
+      <img src="photo5.jpg" alt="Фото дома 5" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="placeholder" style="display:none;"><span>📷</span>Место для фото 5<br>файл photo5.jpg</div>
+      <div class="zoom-hint">🔍</div>
+    </div>
+    <div class="photo" onclick="openLb(5)">
+      <img src="photo6.jpg" alt="Фото дома 6" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="placeholder" style="display:none;"><span>📷</span>Место для фото 6<br>файл photo6.jpg</div>
+      <div class="zoom-hint">🔍</div>
+    </div>
+  </div>
+
+  <h2>О доме</h2>
+  <p class="section-sub">Всё для комфортного отдыха на одном участке</p>
+  <div class="ornament">— ❦ —</div>
+
+  <div class="features">
+    <div class="card"><div class="icon">🏠</div><h3>Дом</h3>
+      <p>Просторный и уютный дом со всеми удобствами для комфортного проживания. Подходит для отдыха семьёй или компанией.</p>
+    </div>
+    <div class="card"><div class="icon">🧖</div><h3>Баня</h3>
+      <p>На участке находится тёплая баня — отличное место, чтобы расслабиться и согреться после прогулки.</p>
+    </div>
+    <div class="card"><div class="icon">🏊</div><h3>Бассейн</h3>
+      <p>Летом к вашим услугам бассейн на улице. Освежающее купание и отдых на свежем воздухе обеспечены!</p>
+    </div>
+  </div>
+
+  <div class="desc">
+    <p>Сдаётся замечательный дом в городе <b>Саратов</b> на закрытой территории. Здесь есть всё для комфортного отдыха: просторный дом, тёплая баня и бассейн на улице. Свежий воздух, тишина и уединение — идеальное место, чтобы отдохнуть от городской суеты.</p>
+    <p>В доме есть всё необходимое для проживания: уютные комнаты, кухня с техникой и посудой, горячая вода, отопление и Wi-Fi. Всё чисто, аккуратно и готово к заселению — приезжайте и живите.</p>
+    <p>На участке — ухоженная территория с местом для парковки и зоной отдыха на свежем воздухе. Летом можно купаться в бассейне, а в любое время года попариться в бане. Подойдёт как для семейного отдыха на выходные, так и для длительного проживания.</p>
+    <p>Ждём ответственных и аккуратных жильцов! Звоните или пишите во ВКонтакте — расскажем всё подробно и договоримся о просмотре.</p>
+  </div>
+
+  <div class="contact-wrap">
+    <h2>Свяжитесь с нами</h2>
+    <a class="phone" href="tel:+79271161007">📞 +7 927 116 1007</a>
+    <br>
+    <a class="vk-btn" href="https://vk.com/arendadomasaratov" target="_blank"><span class="vk-ic">VK</span> ВКонтакте: arendadomasaratov</a>
+    <div class="notes-row">
+      <div class="note-pill">💰 Цена обговаривается по телефону</div>
+      <div class="note-pill">📍 Точный адрес — по телефону</div>
+      <div class="note-pill">🏙️ Дом находится в г. Саратов</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  ❦ &nbsp; © 2026 Сдаётся дом в Саратове &nbsp; ❦
+</footer>
+
+<!-- ===== ПРОСМОТРЩИК ФОТО ===== -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this) closeLb()">
+  <button class="lb-btn lb-close" onclick="closeLb()">✕</button>
+  <button class="lb-btn lb-prev" onclick="prevPhoto()">‹</button>
+  <img id="lbImg" src="" alt="Фото">
+  <button class="lb-btn lb-next" onclick="nextPhoto()">›</button>
+  <div class="lb-counter" id="lbCounter"></div>
+</div>
+
+<script>
+  var photos = ['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg','photo6.jpg'];
+  var current = 0;
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lbImg');
+  var lbCounter = document.getElementById('lbCounter');
+
+  lbImg.onerror = function() { lbImg.style.display = 'none'; };
+
+  function openLb(i) {
+    current = i;
+    showPhoto();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function showPhoto() {
+    lbImg.style.display = 'block';
+    lbImg.src = photos[current];
+    lbCounter.textContent = 'Фото ' + (current + 1) + ' из ' + photos.length;
+  }
+  function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+  function nextPhoto() { current = (current + 1) % photos.length; showPhoto(); }
+  function prevPhoto() { current = (current - 1 + photos.length) % photos.length; showPhoto(); }
+
+  document.addEventListener('keydown', function(e) {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLb();
+    if (e.key === 'ArrowRight') nextPhoto();
+    if (e.key === 'ArrowLeft') prevPhoto();
+  });
+</script>
+
+</body>
+</html>
